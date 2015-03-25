@@ -14,9 +14,17 @@ var templateFolderPath = opts._[0];
 var outputFilePath = opts.o;
 var templateFileObject = {};
 
+var options = {
+	moduleName: 'templateCache',
+	browserify: opts.b !== undefined,
+	quote: '\'',
+	strict: true,
+	indent: '  '
+};
+
 var finalTemplate = function (templates, options) {
 	var template = '';
-	
+
 	if (options.browserify)
 		template = 'var angular = require(\'angular\');\n';
 
@@ -24,13 +32,6 @@ var finalTemplate = function (templates, options) {
 		'run([\'$templateCache\', function($templateCache) {' +
 		templates + '\n' +
 		'}]);\n');
-};
-
-var options = {
-	moduleName: 'templateCache',
-	quote: '\'',
-	strict: true,
-	indent: '  '
 };
 
 var indent = options.indent;
