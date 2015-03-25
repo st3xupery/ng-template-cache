@@ -15,11 +15,15 @@ var outputFilePath = opts.o;
 var templateFileObject = {};
 
 var finalTemplate = function (templates, options) {
-	return 'var angular = require(\'angular\');\n' + 
-	'angular.module("' + options.moduleName + '", []).\n' +
-	'run([\'$templateCache\', function($templateCache) {' +
-	templates + '\n' +
-	'}]);\n';
+	var template = '';
+	
+	if (options.browserify)
+		template = 'var angular = require(\'angular\');\n';
+
+	return template.concat('angular.module("' + options.moduleName + '", []).\n' +
+		'run([\'$templateCache\', function($templateCache) {' +
+		templates + '\n' +
+		'}]);\n');
 };
 
 var options = {
@@ -74,7 +78,7 @@ function parsePutTemplate(templates) {
 	return out;
 }
 
-fs.readdirSync(templateFolderPath).forEach(function(fileName) {
+fs.readdirSync(templateFolderPath).forEach(function (fileName) {
 	var key = fileName.substr(0, fileName.lastIndexOf('.')) || fileName;
 	templateFileObject[key] = jade.renderFile(templateFolderPath + '/' + fileName);
 });
