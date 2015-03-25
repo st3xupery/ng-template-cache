@@ -1,0 +1,25 @@
+{
+  "name": "ng-template-cache",
+  "version": "0.0.1",
+  "description": "Quickly build angular template caches",
+  "main": "./ng-template-cache.js",
+  "bin": {
+    "bowcat": "./ng-template-cache.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "html-minifier": "^0.7.0",
+    "jade": "^1.9.2",
+    "minimist": "^1.1.1"
+  },
+  "devDependencies": {
+    "should": "4.0.4",
+    "exec": "0.1.2",
+    "mocha": "2.1.0"
+  },
+  "author": "Daniel Alksnis",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/st3xupery/ng-template-cache.git"
+  }
+}
