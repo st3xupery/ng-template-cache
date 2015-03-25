@@ -4,7 +4,7 @@
   "description": "Quickly build angular template caches",
   "main": "./ng-template-cache.js",
   "bin": {
-    "bowcat": "./ng-template-cache.js"
+    "ng-template-cache": "./ng-template-cache.js"
   },
   "license": "MIT",
   "dependencies": {

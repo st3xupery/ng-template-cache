@@ -1,6 +1,12 @@
-var minify = require('html-minifier').minify;
-var jade = require('jade');
+#!/usr/bin/env node
+
+/* global require, module */
+
+// require()s
+
 var fs = require('fs');
+var jade = require('jade');
+var minify = require('html-minifier').minify;
 
 var opts = require('minimist')(process.argv.slice(2));
 
