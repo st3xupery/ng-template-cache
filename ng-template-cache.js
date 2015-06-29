@@ -7,6 +7,8 @@
 var fs = require('fs');
 var jade = require('jade');
 var minify = require('html-minifier').minify;
+var junk = require('junk');
+var path = require('path');
 
 var opts = require('minimist')(process.argv.slice(2));
 
@@ -79,9 +81,53 @@ function parsePutTemplate(templates) {
 	return out;
 }
 
-fs.readdirSync(templateFolderPath).forEach(function (fileName) {
-	var key = fileName.substr(0, fileName.lastIndexOf('.')) || fileName;
-	templateFileObject[key] = jade.renderFile(templateFolderPath + '/' + fileName);
-});
+var fileNames = [];
+var count = 0;
+var templateObj = {};
+var deferred = [];
 
-fs.writeFileSync(outputFilePath, finalTemplate(parsePutTemplate(templateFileObject), options));
+var compileTemplates = function (dir, cb) {
+	var templateObj = {},
+		file_counter = 1,
+		async_running = 0;
+
+	dir = path.normalize(dir).concat('/');
+
+	var again = function (current_dir) {
+		fs.lstat(current_dir, function (err, stat) {
+			if (err) {
+				file_counter--;
+				return;
+			}
+			var fileName = path.parse(current_dir).name;
+			if (stat.isFile()) {
+				file_counter--;
+				templateObj[current_dir.replace(dir, '').replace('.jade', '.html')] = jade.renderFile(current_dir);
+			} else if (stat.isDirectory()) {
+				file_counter--;
+				async_running++;
+				fs.readdir(current_dir, function (err, files) {
+					async_running--;
+					if (err) {
+						return;
+					}
+					files = files.filter(junk.not);
+					file_counter += files.length;
+					files.forEach(function (file) {
+						again(path.join(current_dir, file));
+					});
+				});
+			} else {
+				file_counter--;
+			}
+			if (file_counter === 0 && async_running === 0) {
+				cb(templateObj);
+			}
+		});
+	};
+	again(dir);
+};
+
+compileTemplates(templateFolderPath, function (templateObj) {
+	fs.writeFile(outputFilePath, finalTemplate(parsePutTemplate(templateObj), options));
+});

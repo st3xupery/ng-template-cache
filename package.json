@@ -10,6 +10,7 @@
   "dependencies": {
     "html-minifier": "^0.7.0",
     "jade": "^1.9.2",
+    "junk": "^1.0.1",
     "minimist": "^1.1.1"
   },
   "devDependencies": {
